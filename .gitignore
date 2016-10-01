@@ -1,0 +1,5 @@
+graphic.ppm
+*.gch
+*.o
+main
+*.dSYM/

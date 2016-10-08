@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all clean format
 CXXFLAGS=-Wall -Wextra -Werror -std=c++14 -c
 LD=ld
 all: graphic.ppm
@@ -14,3 +14,6 @@ main: main.o vec3.o ray.o
 
 clean:
 	rm -f main *.o graphic.ppm
+
+format:
+	clang-format -i *.cpp *.h

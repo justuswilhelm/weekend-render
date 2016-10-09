@@ -1,5 +1,5 @@
 .PHONY: all clean format
-CXXFLAGS=-Wall -Wextra -Werror -std=c++14 -c
+CXXFLAGS=-Wall -Wextra -Werror -std=c++11 -c
 LD=ld
 all: graphic.ppm
 

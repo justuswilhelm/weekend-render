@@ -1,3 +1,4 @@
 test:
     override:
         - make all
+        - mv graphic.ppm $CIRCLE_ARTIFACTS/graphic.ppm

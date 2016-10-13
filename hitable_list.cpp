@@ -5,8 +5,8 @@ bool hitable_list::hit(const ray &r, float t_min, float t_max,
   hit_record temp_rec;
   auto hit_anything = false;
   auto closest_so_far = t_max;
-  for (int i = 0; i < list_size; i++) {
-    if (list[i]->hit(r, t_min, closest_so_far, temp_rec)) {
+  for (auto h : list) {
+    if (h->hit(r, t_min, closest_so_far, temp_rec)) {
       hit_anything = true;
       closest_so_far = temp_rec.t;
       rec = temp_rec;

@@ -28,10 +28,9 @@ int main() {
 
   camera cam;
 
-  hitable *list[2];
-  auto *world = new hitable_list(list, 2);
-  list[0] = new sphere(vec3(0, 0, -1), 0.5);
-  list[1] = new sphere(vec3(0, -100.5, -1), 100);
+  auto *world = new hitable_list({
+      new sphere(vec3(0, 0, -1), 0.5),
+      new sphere(vec3(0, -100.5, -1), 100)});
 
   for (auto j = ny - 1; j >= 0; j--) {
     for (auto i = 0; i < nx; i++) {

@@ -1,47 +1,42 @@
 #include "vec3.h"
 
 vec3 vec3::operator+(const vec3 &v) const {
-  return vec3(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]);
+  return vec3(x + v.x, y + v.y, z + v.z);
 }
 
 vec3 vec3::operator-(const vec3 &v) const {
-  return vec3(e[0] - v.e[0], e[1] - v.e[1], e[2] - v.e[2]);
+  return vec3(x - v.x, y - v.y, z - v.z);
 }
 
-vec3 vec3::operator-() const { return vec3(-e[0], -e[1], -e[2]); }
+vec3 vec3::operator-() const { return vec3(-x, -y, -z); }
 
 vec3 vec3::operator*(const vec3 &v) const {
-  return vec3(e[0] * v.e[0], e[1] * v.e[1], e[2] * v.e[2]);
+  return vec3(x * v.x, y * v.y, z * v.z);
 }
 
 vec3 vec3::operator/(const vec3 &v) const {
-  return vec3(e[0] / v.e[0], e[1] / v.e[1], e[2] / v.e[2]);
+  return vec3(x / v.x, y / v.y, z / v.z);
 }
 
-vec3 vec3::operator*(const float t) const {
-  return vec3(e[0] * t, e[1] * t, e[2] * t);
-}
+vec3 vec3::operator*(const float t) const { return vec3(x * t, y * t, z * t); }
 
 vec3 vec3::operator/(const float t) const {
   auto k = 1.0 / t;
-  return vec3(e[0] * k, e[1] * k, e[2] * k);
+  return vec3(x * k, y * k, z * k);
 }
 
 float vec3::dot(const vec3 &v) const {
-  return this->e[0] * v.e[0] + this->e[1] * v.e[1] + this->e[2] * v.e[2];
+  return this->x * v.x + this->y * v.y + this->z * v.z;
 }
 
 vec3 vec3::cross(const vec3 &v) const {
-  return vec3(this->e[1] * v.e[2] - this->e[2] * v.e[1],
-              this->e[2] * v.e[0] - this->e[0] * v.e[0],
-              this->e[0] * v.e[1] - this->e[1] * v.e[0]);
+  return vec3(this->y * v.z - this->z * v.y, this->z * v.x - this->x * v.x,
+              this->x * v.y - this->y * v.x);
 }
 
 float vec3::length() const { return sqrt(this->squared_length()); }
 
-float vec3::squared_length() const {
-  return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
-}
+float vec3::squared_length() const { return x * x + y * y + z * z; }
 
 vec3 vec3::unit_vector() const {
   return *this / this->length();
@@ -49,11 +44,11 @@ vec3 vec3::unit_vector() const {
 }
 
 std::istream &operator>>(std::istream &is, vec3 &t) {
-  is >> t.e[0] >> t.e[1] >> t.e[2];
+  is >> t.x >> t.y >> t.z;
   return is;
 }
 
 std::ostream &operator<<(std::ostream &os, vec3 &t) {
-  os << t.e[0] << " " << t.e[1] << " " << t.e[2];
+  os << t.x << " " << t.y << " " << t.z;
   return os;
 }

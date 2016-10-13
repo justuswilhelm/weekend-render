@@ -5,16 +5,16 @@
 #include "sphere.h"
 #include "vec3.h"
 #include <iostream>
+#include <memory>
 #include <random>
 
-vec3 color(const ray &r, hitable *world) {
+vec3 color(const ray &r, hitable &world) {
   hit_record rec;
-  if (world->hit(r, 0.0, FLT_MAX, rec)) {
-    return vec3(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1) *
-           0.5;
+  if (world.hit(r, 0.0, FLT_MAX, rec)) {
+    return vec3(rec.normal.x + 1, rec.normal.y + 1, rec.normal.z + 1) * 0.5;
   } else {
     auto unit_direction = r.direction().unit_vector();
-    auto t = 0.5 * (unit_direction.y() + 1.0);
+    auto t = 0.5 * (unit_direction.y + 1.0);
     return vec3(1.0, 1.0, 1.0) * (1.0 - t) + vec3(0.5, 0.7, 1.0) * t;
   }
 }
@@ -28,10 +28,11 @@ int main() {
 
   camera cam;
 
-  auto *world = new hitable_list(
-      {new sphere(vec3(0, 0, -1), 0.5), new sphere(vec3(0, -100.5, -1), 100)});
+  auto a = std::make_shared<sphere>(sphere(vec3(0, 0, -1), 0.5));
+  auto b = std::make_shared<sphere>(sphere(vec3(0, -100.5, -1), 100));
+  hitable_list world({a, b});
 
-  for (auto j = ny - 1; j >= 0; j--) {
+  for (auto j = 0; j < ny; j++) {
     for (auto i = 0; i < nx; i++) {
       vec3 col(0, 0, 0);
       for (int s = 0; s < ns; s++) {
@@ -42,9 +43,9 @@ int main() {
       }
       col = col / float(ns);
 
-      auto ir = int(255 * col[0]);
-      auto ig = int(255 * col[1]);
-      auto ib = int(255 * col[2]);
+      auto ir = int(255 * col.x);
+      auto ig = int(255 * col.y);
+      auto ib = int(255 * col.z);
 
       std::cout << ir << " " << ig << " " << ib << "\n";
     }

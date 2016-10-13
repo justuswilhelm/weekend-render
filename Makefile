@@ -5,7 +5,7 @@ OBJS=main.o vec3.o ray.o sphere.o hitable_list.o
 all: graphic.ppm
 
 graphic.ppm: main
-	./$^ > $@
+	time ./$^ > $@
 
 main: $(OBJS)
 	$(CXX) $(LDFLAGS) $^ -o $@

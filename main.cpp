@@ -2,7 +2,9 @@
 #include "hitable_list.h"
 #include "ray.h"
 #include "sphere.h"
+#include <random>
 #include "vec3.h"
+#include "camera.h"
 #include <iostream>
 
 vec3 color(const ray &r, hitable *world) {
@@ -18,15 +20,13 @@ vec3 color(const ray &r, hitable *world) {
 }
 
 int main() {
-  auto nx = 200;
-  auto ny = 100;
+  auto nx = 400;
+  auto ny = 200;
+  auto ns = 100;
 
   std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
-  vec3 lower_left_corner(-2.0, -1.0, -1.0);
-  vec3 horizontal(4.0, 0.0, 0.0);
-  vec3 vertical(0.0, 2.0, 0.0);
-  vec3 origin(0.0, 0.0, 0.0);
+  camera cam;
 
   hitable *list[2];
   auto *world = new hitable_list(list, 2);
@@ -35,15 +35,18 @@ int main() {
 
   for (auto j = ny - 1; j >= 0; j--) {
     for (auto i = 0; i < nx; i++) {
-      auto u = float(i) / float(nx);
-      auto v = float(j) / float(ny);
-      ray r(origin, lower_left_corner + horizontal * u + vertical * v);
-      // auto p = r.point_at_parameter(2.0);
-      auto col = color(r, world);
+      vec3 col(0, 0, 0);
+      for (int s=0; s < ns; s++) {
+        auto u = float(i + drand48()) / float(nx);
+        auto v = float(j + drand48()) / float(ny);
+        auto r = cam.get_ray(u, v);
+        col = col + color(r, world);
+      }
+      col = col / float(ns);
 
-      auto ir = int(255.99 * col[0]);
-      auto ig = int(255.99 * col[1]);
-      auto ib = int(255.99 * col[2]);
+      auto ir = int(255 * col[0]);
+      auto ig = int(255 * col[1]);
+      auto ib = int(255 * col[2]);
 
       std::cout << ir << " " << ig << " " << ib << "\n";
     }

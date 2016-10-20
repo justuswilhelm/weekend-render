@@ -1,26 +1,28 @@
-#include "camera.h"
-#include "float.h"
-#include "hitable_list.h"
-#include "ray.h"
-#include "sphere.h"
-#include "vec3.h"
 #include <iostream>
 #include <memory>
 #include <random>
 
-vec3 random_in_unit_sphere() {
-  vec3 p;
-  do {
-    p = vec3(drand48(), drand48(), drand48()) * 2.0 - vec3(1, 1, 1);
-  } while (p.squared_length() >= 1.0);
-  return p;
-}
+#include "camera.h"
+#include "float.h"
+#include "hitable_list.h"
+#include "lambertian.h"
+#include "material.h"
+#include "metal.h"
+#include "ray.h"
+#include "sphere.h"
+#include "vec3.h"
 
-vec3 color(const ray &r, hitable &world) {
+vec3 color(const ray &r, hitable &world, int depth) {
   hit_record rec;
   if (world.hit(r, 0.001, FLT_MAX, rec)) {
-    vec3 target = rec.p + rec.normal + random_in_unit_sphere();
-    return color(ray(rec.p, target - rec.p), world) * 0.5;
+    ray scattered;
+    vec3 attenuation;
+    std::shared_ptr<material> m = rec.material;
+    if (depth < 50 && m->scatter(r, rec, attenuation, scattered)) {
+      return color(scattered, world, depth + 1) * attenuation;
+    } else {
+      return vec3(0, 0, 0);
+    }
   } else {
     auto unit_direction = r.direction().unit_vector();
     auto t = 0.5 * (unit_direction.y + 1.0);
@@ -37,9 +39,15 @@ int main() {
 
   camera cam;
 
-  auto a = std::make_shared<sphere>(sphere(vec3(0, 0, -1), 0.5));
-  auto b = std::make_shared<sphere>(sphere(vec3(0, 100.5, -1), 100));
-  hitable_list world({a, b});
+  auto m1 = std::make_shared<lambertian>(lambertian(vec3(0.8, 0.3, 0.3)));
+  auto m2 = std::make_shared<lambertian>(lambertian(vec3(0.8, 0.8, 0.0)));
+  auto m3 = std::make_shared<metal>(metal(vec3(0.8, 0.6, 0.2), 0));
+  auto m4 = std::make_shared<metal>(metal(vec3(0.8, 0.8, 0.8), 0.3));
+  auto a = std::make_shared<sphere>(sphere(vec3(0, 0, -1), 0.5, m1));
+  auto b = std::make_shared<sphere>(sphere(vec3(0, 100.5, -1), 100, m2));
+  auto c = std::make_shared<sphere>(sphere(vec3(1, 0, -1), 0.5, m3));
+  auto d = std::make_shared<sphere>(sphere(vec3(-1, 0, -1), 0.5, m4));
+  hitable_list world({a, b, c, d});
 
   for (auto j = 0; j < ny; j++) {
     for (auto i = 0; i < nx; i++) {
@@ -48,7 +56,7 @@ int main() {
         auto u = float(i + drand48()) / float(nx);
         auto v = float(j + drand48()) / float(ny);
         auto r = cam.get_ray(u, v);
-        col = col + color(r, world);
+        col = col + color(r, world, 0);
       }
       col = col / float(ns);
       col = vec3(sqrt(col.x), sqrt(col.y), sqrt(col.z));

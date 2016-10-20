@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HITABLE_LIST_H
+#define HITABLE_LIST_H
 #include "hitable.h"
 #include <memory>
 #include <vector>
@@ -10,3 +11,4 @@ public:
   virtual bool hit(const ray &r, float tmin, float tmax, hit_record &rec) const;
   std::vector<std::shared_ptr<hitable>> list;
 };
+#endif

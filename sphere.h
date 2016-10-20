@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef SPHERE_H
+#define SPHERE_H
 #include "hitable.h"
 
 class sphere : public hitable {
@@ -10,3 +10,4 @@ public:
   vec3 center;
   float radius;
 };
+#endif

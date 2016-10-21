@@ -1,8 +1,8 @@
 #include "hitable_list.h"
 
-bool hitable_list::hit(const ray &r, float t_min, float t_max,
-                       hit_record &rec) const {
-  hit_record temp_rec;
+bool HitableList::hit(const Ray &r, float t_min, float t_max,
+                      HitRecord &rec) const {
+  HitRecord temp_rec;
   auto hit_anything = false;
   auto closest_so_far = t_max;
   for (auto h : list) {

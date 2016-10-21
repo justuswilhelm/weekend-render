@@ -1,7 +1,6 @@
 #include "sphere.h"
 
-bool sphere::hit(const ray &r, float t_min, float t_max,
-                 hit_record &rec) const {
+bool Sphere::hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const {
   auto oc = r.origin() - center;
   auto a = r.direction().dot(r.direction());
   auto b = oc.dot(r.direction());

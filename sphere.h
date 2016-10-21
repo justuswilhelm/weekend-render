@@ -4,13 +4,13 @@
 #include "material.h"
 #include <memory>
 
-class sphere : public hitable {
+class Sphere : public Hitable {
 public:
-  sphere(vec3 cen, float r, std::shared_ptr<material> material)
+  Sphere(Vec3 cen, float r, std::shared_ptr<Material> material)
       : center(cen), radius(r), m(material){};
-  virtual bool hit(const ray &r, float tmin, float tmax, hit_record &rec) const;
-  vec3 center;
+  virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
+  Vec3 center;
   float radius;
-  std::shared_ptr<material> m;
+  std::shared_ptr<Material> m;
 };
 #endif

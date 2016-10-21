@@ -4,16 +4,16 @@
 #include "ray.h"
 #include "vec3.h"
 
-class lambertian : public material {
+class lambertian : public Material {
 public:
-  lambertian(const vec3 &a) : albedo(a) {}
-  virtual bool scatter(const ray &, const hit_record &rec, vec3 &attenuation,
-                       ray &scattered) const {
-    vec3 target = rec.p + rec.normal + vec3::random_in_unit_sphere();
-    scattered = ray(rec.p, target - rec.p);
+  lambertian(const Vec3 &a) : albedo(a) {}
+  virtual bool scatter(const Ray &, const HitRecord &rec, Vec3 &attenuation,
+                       Ray &scattered) const {
+    Vec3 target = rec.p + rec.normal + Vec3::random_in_unit_sphere();
+    scattered = Ray(rec.p, target - rec.p);
     attenuation = albedo;
     return true;
   }
-  vec3 albedo;
+  Vec3 albedo;
 };
 #endif

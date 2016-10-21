@@ -1,20 +1,24 @@
+#ifndef CAMERA_H
+#define CAMERA_H
 #include "ray.h"
+#include "vec3.h"
 
 class camera {
 public:
   camera() {
-    lower_left_corner = vec3(-2.0, -1.0, -1.0);
-    horizontal = vec3(4.0, 0.0, 0.0);
-    vertical = vec3(0.0, 2.0, 0.0);
-    origin = vec3(0.0, 0.0, 0.0);
+    lower_left_corner = Vec3(-2.0, -1.0, -1.0);
+    horizontal = Vec3(4.0, 0.0, 0.0);
+    vertical = Vec3(0.0, 2.0, 0.0);
+    origin = Vec3(0.0, 0.0, 0.0);
   }
-  ray get_ray(float u, float v) {
-    return ray(origin,
+  Ray get_ray(float u, float v) {
+    return Ray(origin,
                lower_left_corner + horizontal * u + vertical * v - origin);
   }
 
-  vec3 lower_left_corner;
-  vec3 horizontal;
-  vec3 vertical;
-  vec3 origin;
+  Vec3 lower_left_corner;
+  Vec3 horizontal;
+  Vec3 vertical;
+  Vec3 origin;
 };
+#endif

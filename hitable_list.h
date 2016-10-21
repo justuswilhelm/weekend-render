@@ -4,11 +4,11 @@
 #include <memory>
 #include <vector>
 
-class hitable_list : public hitable {
+class HitableList : public Hitable {
 public:
-  hitable_list() {}
-  hitable_list(std::vector<std::shared_ptr<hitable>> l) : list(l) {}
-  virtual bool hit(const ray &r, float tmin, float tmax, hit_record &rec) const;
-  std::vector<std::shared_ptr<hitable>> list;
+  HitableList() {}
+  HitableList(std::vector<std::shared_ptr<Hitable>> l) : list(l) {}
+  virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
+  std::vector<std::shared_ptr<Hitable>> list;
 };
 #endif

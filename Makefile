@@ -10,7 +10,7 @@ main: $(OBJS)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:
-	rm -f main *.o graphic.ppm
+	rm -f main *.o graphic.ppm *.h.gch
 
 format:
 	clang-format -i *.cpp *.h

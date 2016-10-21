@@ -3,6 +3,7 @@
 #include <random>
 
 #include "camera.h"
+#include "dielectric.h"
 #include "float.h"
 #include "hitable_list.h"
 #include "lambertian.h"
@@ -39,15 +40,22 @@ int main() {
 
   camera cam;
 
-  auto m1 = std::make_shared<lambertian>(lambertian(Vec3(0.8, 0.3, 0.3)));
-  auto m2 = std::make_shared<lambertian>(lambertian(Vec3(0.8, 0.8, 0.0)));
-  auto m3 = std::make_shared<metal>(metal(Vec3(0.8, 0.6, 0.2), 0));
-  auto m4 = std::make_shared<metal>(metal(Vec3(0.8, 0.8, 0.8), 0.3));
-  auto a = std::make_shared<Sphere>(Sphere(Vec3(0, 0, -1), 0.5, m1));
-  auto b = std::make_shared<Sphere>(Sphere(Vec3(0, 100.5, -1), 100, m2));
-  auto c = std::make_shared<Sphere>(Sphere(Vec3(1, 0, -1), 0.5, m3));
-  auto d = std::make_shared<Sphere>(Sphere(Vec3(-1, 0, -1), 0.5, m4));
-  HitableList world({a, b, c, d});
+  HitableList world({
+      std::make_shared<Sphere>(Sphere(
+          Vec3(0, 0, -1), 0.5,
+          std::make_shared<Lambertian>(Lambertian(Vec3(0.1, 0.2, 0.5))))),
+      std::make_shared<Sphere>(Sphere(
+          Vec3(0, 100.5, -1), 100,
+          std::make_shared<Lambertian>(Lambertian(Vec3(0.8, 0.8, 0.0))))),
+      std::make_shared<Sphere>(
+          Sphere(Vec3(1, 0, -1), 0.5,
+                 std::make_shared<Metal>(Metal(Vec3(0.8, 0.6, 0.2), 0)))),
+      std::make_shared<Sphere>(Sphere(
+          Vec3(-1, 0, -1), 0.5, std::make_shared<Dielectric>(Dielectric(1.5)))),
+      std::make_shared<Sphere>(
+          Sphere(Vec3(-1, 0, -1), -0.45,
+                 std::make_shared<Dielectric>(Dielectric(1.5)))),
+  });
 
   for (auto j = 0; j < ny; j++) {
     for (auto i = 0; i < nx; i++) {

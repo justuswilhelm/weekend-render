@@ -4,11 +4,11 @@
 #include "ray.h"
 #include "vec3.h"
 
-class metal : public Material {
+class Metal : public Material {
 public:
-  metal(const Vec3 &a, float f) : albedo(a), fuzz(f) {}
-  virtual bool scatter(const Ray &r_in, const HitRecord &rec,
-                       Vec3 &attenuation, Ray &scattered) const {
+  Metal(const Vec3 &a, float f) : albedo(a), fuzz(f) {}
+  virtual bool scatter(const Ray &r_in, const HitRecord &rec, Vec3 &attenuation,
+                       Ray &scattered) const {
     Vec3 reflected = r_in.direction().unit_vector().reflect(rec.normal);
     scattered = Ray(rec.p, reflected + Vec3::random_in_unit_sphere() * fuzz);
     attenuation = albedo;

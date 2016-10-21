@@ -4,9 +4,9 @@
 #include "ray.h"
 #include "vec3.h"
 
-class lambertian : public Material {
+class Lambertian : public Material {
 public:
-  lambertian(const Vec3 &a) : albedo(a) {}
+  Lambertian(const Vec3 &a) : albedo(a) {}
   virtual bool scatter(const Ray &, const HitRecord &rec, Vec3 &attenuation,
                        Ray &scattered) const {
     Vec3 target = rec.p + rec.normal + Vec3::random_in_unit_sphere();

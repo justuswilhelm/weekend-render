@@ -11,7 +11,7 @@ bool sphere::hit(const ray &r, float t_min, float t_max,
   if (discriminant > 0) {
     float temp = (-b - discriminant_sqrt) / a;
     if (temp < t_max && temp > t_min) {
-      rec.material = material;
+      rec.m = m;
       rec.t = temp;
       rec.p = r.point_at_parameter(rec.t);
       rec.normal = (rec.p - center) / radius;
@@ -19,7 +19,7 @@ bool sphere::hit(const ray &r, float t_min, float t_max,
     }
     temp = (-b + discriminant_sqrt) / a;
     if (temp < t_max && temp > t_min) {
-      rec.material = material;
+      rec.m = m;
       rec.t = temp;
       rec.p = r.point_at_parameter(rec.t);
       rec.normal = (rec.p - center) / radius;

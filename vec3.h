@@ -9,6 +9,8 @@ public:
   Vec3() {}
   Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
 
+  static Vec3 random_vector() { return Vec3(drand48(), drand48(), drand48()); }
+
   static Vec3 random_in_unit_sphere() {
     Vec3 p;
     do {

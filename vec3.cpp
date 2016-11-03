@@ -38,17 +38,4 @@ float Vec3::length() const { return sqrt(this->squared_length()); }
 
 float Vec3::squared_length() const { return x * x + y * y + z * z; }
 
-Vec3 Vec3::unit_vector() const {
-  return *this / this->length();
-  ;
-}
-
-std::istream &operator>>(std::istream &is, Vec3 &t) {
-  is >> t.x >> t.y >> t.z;
-  return is;
-}
-
-std::ostream &operator<<(std::ostream &os, Vec3 &t) {
-  os << t.x << " " << t.y << " " << t.z;
-  return os;
-}
+Vec3 Vec3::unit_vector() const { return *this / this->length(); }

@@ -31,47 +31,58 @@ Vec3 color(const Ray &r, Hitable &world, int depth) {
   }
 }
 
+HitableList random_scene() {
+  HitableList result;
+  int n = 50;
+  result.list.push_back(std::make_shared<Sphere>(
+      Sphere(Vec3(0, 1000, 0), 1000,
+             std::make_shared<Lambertian>(Lambertian(Vec3(0.5, 0.5, 0.5))))));
+  for (int i = 0; i < n; i++) {
+    float radius = drand48();
+    std::shared_ptr<Material> mat;
+    auto pos = (Vec3(0.5, 0.5, 0.5) - Vec3::random_vector()) * 10;
+    pos.y = -radius;
+
+    if (i % 3 == 0) {
+      mat = std::make_shared<Lambertian>(Lambertian(Vec3::random_vector()));
+    } else if (i % 3 == 1) {
+      mat = std::make_shared<Dielectric>(Dielectric(0.5));
+    } else if (i % 3 == 2) {
+      mat = std::make_shared<Metal>(Metal(Vec3::random_vector(), 1));
+    }
+    result.list.push_back(std::make_shared<Sphere>(
+                          Sphere(pos, radius, mat)));
+  }
+  return result;
+}
+
 int main() {
-  auto nx = 400;
-  auto ny = 200;
+  float scale = 1.5;
+  int nx(600 * scale);
+  int ny(400 * scale);
   auto ns = 100;
 
   std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
-  camera cam;
-
-  HitableList world({
-      std::make_shared<Sphere>(Sphere(
-          Vec3(0, 0, -1), 0.5,
-          std::make_shared<Lambertian>(Lambertian(Vec3(0.1, 0.2, 0.5))))),
-      std::make_shared<Sphere>(Sphere(
-          Vec3(0, 100.5, -1), 100,
-          std::make_shared<Lambertian>(Lambertian(Vec3(0.8, 0.8, 0.0))))),
-      std::make_shared<Sphere>(
-          Sphere(Vec3(1, 0, -1), 0.5,
-                 std::make_shared<Metal>(Metal(Vec3(0.8, 0.6, 0.2), 0)))),
-      std::make_shared<Sphere>(Sphere(
-          Vec3(-1, 0, -1), 0.5, std::make_shared<Dielectric>(Dielectric(1.5)))),
-      std::make_shared<Sphere>(
-          Sphere(Vec3(-1, 0, -1), -0.45,
-                 std::make_shared<Dielectric>(Dielectric(1.5)))),
-  });
-
+  camera cam(Vec3(-4, -3, 4), Vec3(0, 0, -1), Vec3(0, 1, 0), 90,
+             float(nx) / float(ny));
+  auto world = random_scene();
   for (auto j = 0; j < ny; j++) {
+    fprintf(stderr, "ny: %d/%d\n", j, ny);
     for (auto i = 0; i < nx; i++) {
       Vec3 col(0, 0, 0);
       for (int s = 0; s < ns; s++) {
-        auto u = float(i + drand48()) / float(nx);
-        auto v = float(j + drand48()) / float(ny);
+        float u((i + drand48()) / float(nx));
+        float v((j + drand48()) / float(ny));
         auto r = cam.get_ray(u, v);
         col = col + color(r, world, 0);
       }
       col = col / float(ns);
       col = Vec3(sqrt(col.x), sqrt(col.y), sqrt(col.z));
 
-      auto ir = int(255 * col.x);
-      auto ig = int(255 * col.y);
-      auto ib = int(255 * col.z);
+      int ir(255 * col.x);
+      int ig(255 * col.y);
+      int ib(255 * col.z);
 
       std::cout << ir << " " << ig << " " << ib << "\n";
     }

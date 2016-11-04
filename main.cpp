@@ -31,16 +31,15 @@ Vec3 color(const Ray &r, Hitable &world, int depth) {
   }
 }
 
-HitableList random_scene() {
+HitableList random_scene(int n) {
   HitableList result;
-  int n = 50;
   result.list.push_back(std::make_shared<Sphere>(
       Sphere(Vec3(0, 1000, 0), 1000,
              std::make_shared<Lambertian>(Lambertian(Vec3(0.5, 0.5, 0.5))))));
   for (int i = 0; i < n; i++) {
     float radius = drand48();
     std::shared_ptr<Material> mat;
-    auto pos = (Vec3(0.5, 0.5, 0.5) - Vec3::random_vector()) * 10;
+    auto pos = (Vec3(0.5, 0.5, 0.5) - Vec3::random_vector()) * 15;
     pos.y = -radius;
 
     if (i % 3 == 0) {
@@ -50,23 +49,26 @@ HitableList random_scene() {
     } else if (i % 3 == 2) {
       mat = std::make_shared<Metal>(Metal(Vec3::random_vector(), 1));
     }
-    result.list.push_back(std::make_shared<Sphere>(
-                          Sphere(pos, radius, mat)));
+    result.list.push_back(std::make_shared<Sphere>(Sphere(pos, radius, mat)));
   }
   return result;
 }
 
 int main() {
-  float scale = 1.5;
+  float scale = 1;
   int nx(600 * scale);
   int ny(400 * scale);
   auto ns = 100;
+  auto lookfrom = Vec3(-4, -6, 4);
+  auto lookto = Vec3(0, 0, -1);
+  float dist_to_focus = (lookfrom - lookto).length();
+  auto aperture(0.01);
 
   std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
-  camera cam(Vec3(-4, -3, 4), Vec3(0, 0, -1), Vec3(0, 1, 0), 90,
-             float(nx) / float(ny));
-  auto world = random_scene();
+  camera cam(lookfrom, lookto, Vec3(0, 1, 0), 7, float(nx) / float(ny),
+             aperture, dist_to_focus);
+  auto world = random_scene(100);
   for (auto j = 0; j < ny; j++) {
     fprintf(stderr, "ny: %d/%d\n", j, ny);
     for (auto i = 0; i < nx; i++) {
